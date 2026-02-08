@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Natasha 💜</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  height:100vh;
+  background:radial-gradient(circle at top,#2a003f,#120018,#000);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  font-family:'Poppins',sans-serif;
+  color:#f5e9ff;
+  transition:transform .8s ease, filter .8s ease;
+}
+
+/* CINEMATIC */
+.zoom{transform:scale(1.15)}
+.flash{animation:flash .8s ease}
+@keyframes flash{
+  0%{filter:brightness(1)}
+  40%{filter:brightness(3)}
+  100%{filter:brightness(1)}
+}
+
+.card{
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(25px);
+  border-radius:45px;
+  padding:45px 38px;
+  width:94%;
+  max-width:480px;
+  text-align:center;
+  box-shadow:0 0 60px rgba(170,90,255,.6),
+             0 0 120px rgba(80,0,160,.6);
+  animation:pop 1.4s ease;
+}
+@keyframes pop{
+  from{transform:scale(.4);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:2.6rem;
+  margin-bottom:12px;
+  text-shadow:0 0 25px rgba(190,120,255,.8);
+}
+
+#type{
+  font-size:1.05rem;
+  min-height:100px;
+  margin-bottom:22px;
+  color:#e7d6ff;
+}
+
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:26px;
+  margin-top:24px;
+}
+
+button{
+  padding:18px 42px;
+  border:none;
+  border-radius:80px;
+  font-size:1.1rem;
+  cursor:pointer;
+}
+
+/* YES */
+#yes{
+  background:linear-gradient(135deg,#c77dff,#ff5fd2);
+  color:white;
+  box-shadow:0 0 45px #c77dff;
+  animation:heartbeat 1.4s infinite;
+}
+@keyframes heartbeat{
+  0%{transform:scale(1)}
+  25%{transform:scale(1.12)}
+  50%{transform:scale(1)}
+  75%{transform:scale(1.15)}
+}
+
+/* NO – SLIP MODE */
+#no{
+  background:white;
+  color:#7b2cbf;
+  position:relative;
+  transition:transform .12s ease;
+}
+
+/* ARE YOU SURE OVERLAY */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+.overlay-box{
+  background:linear-gradient(135deg,#2a003f,#120018);
+  border-radius:30px;
+  padding:34px 28px;
+  text-align:center;
+  box-shadow:0 0 40px rgba(170,90,255,.7);
+  animation:pop .6s ease;
+}
+.overlay-box h2{
+  font-size:2rem;
+  margin-bottom:12px;
+}
+.overlay-box p{
+  font-size:1.05rem;
+  opacity:.9;
+  margin-bottom:18px;
+}
+.overlay-box button{
+  background:linear-gradient(135deg,#c77dff,#ff5fd2);
+  color:white;
+  padding:14px 36px;
+  border-radius:60px;
+  font-size:1rem;
+}
+
+/* FINAL */
+.final{
+  display:none;
+  text-align:center;
+  animation:fade 1.6s ease;
+}
+@keyframes fade{
+  from{opacity:0;transform:scale(.8)}
+  to{opacity:1;transform:scale(1)}
+}
+.final h2{font-size:3rem}
+.final p{font-size:1.3rem;margin-top:14px}
+
+.signature{
+  margin-top:20px;
+  font-size:1rem;
+  opacity:.9;
+}
+
+.hearts span{
+  position:absolute;
+  bottom:-30px;
+  font-size:22px;
+  animation:float 6s linear infinite;
+}
+@keyframes float{
+  0%{transform:translateY(0);opacity:1}
+  100%{transform:translateY(-120vh);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" src="music.mp3" loop></audio>
+
+<div class="card" id="card">
+  <h1>Natasha 💜</h1>
+
+  <div id="type"></div>
+
+  <h1>Will you be my Valentine? 🌙</h1>
+
+  <div class="buttons">
+    <button id="yes">YES 💜</button>
+    <button id="no">No 🙈</button>
+  </div>
+</div>
+
+<!-- ARE YOU SURE SCREEN -->
+<div class="overlay" id="sureScreen">
+  <div class="overlay-box">
+    <h2>Are you sure? 🥺</h2>
+    <p>This choice might break a heart 💔</p>
+    <button id="backBtn">Go back 💜</button>
+  </div>
+</div>
+
+<div class="final" id="final">
+  <h2>OMGGG YAYYY 💜</h2>
+  <p>This day will be lwk unforgettable!🤭 I LOVE YOUU SOO MCUHH MYY SWEETHEARTT~!!🤭💋</p>
+  <div class="signature">
+    — With love, <b>Venono nob</b><br>
+    <span id="date"></span>
+  </div>
+</div>
+
+<div class="hearts"></div>
+
+<script>
+/* TYPEWRITER */
+const lines=[
+  "Natasha… 🌙",
+  "Some people feel like a moment…",
+  "You feel like a lifetime 💜",
+  "So I had to ask you tonight…"
+];
+let i=0,j=0;
+const typeDiv=document.getElementById("type");
+(function type(){
+  if(i<lines.length){
+    if(j<lines[i].length){
+      typeDiv.innerHTML+=lines[i][j++];
+      setTimeout(type,55);
+    }else{
+      typeDiv.innerHTML+="<br>";
+      i++; j=0;
+      setTimeout(type,500);
+    }
+  }
+})();
+
+/* NO BUTTON — SLIP + VIBRATION + SURE SCREEN */
+const noBtn=document.getElementById("no");
+const sureScreen=document.getElementById("sureScreen");
+
+function vibrate(){
+  if(navigator.vibrate){
+    navigator.vibrate([80,40,80]);
+  }
+}
+function slip(){
+  const x=(Math.random()*70)-35;
+  const y=(Math.random()*40)-20;
+  noBtn.style.transform=`translate(${x}px,${y}px)`;
+}
+function noAction(){
+  vibrate();
+  slip();
+  sureScreen.style.display="flex";
+}
+
+/* Desktop + Mobile */
+noBtn.addEventListener("mouseenter",slip);
+noBtn.addEventListener("click",noAction);
+noBtn.addEventListener("touchstart",(e)=>{
+  e.preventDefault();
+  noAction();
+});
+
+/* Back from ARE YOU SURE */
+document.getElementById("backBtn").addEventListener("click",()=>{
+  sureScreen.style.display="none";
+});
+
+/* YES CINEMATIC */
+const yesBtn=document.getElementById("yes");
+const card=document.getElementById("card");
+const final=document.getElementById("final");
+const music=document.getElementById("music");
+
+yesBtn.addEventListener("click",()=>{
+  music.play();
+  document.body.classList.add("zoom","flash");
+  setTimeout(()=>{
+    card.style.display="none";
+    final.style.display="block";
+    hearts();
+  },700);
+});
+
+/* HEARTS */
+function hearts(){
+  setInterval(()=>{
+    const s=document.createElement("span");
+    s.innerHTML="💜";
+    s.style.left=Math.random()*100+"vw";
+    document.querySelector(".hearts").appendChild(s);
+    setTimeout(()=>s.remove(),7000);
+  },180);
+}
+
+/* DATE */
+document.getElementById("date").innerText =
+  new Date().toDateString();
+</script>
+
+</body>
+</html>
